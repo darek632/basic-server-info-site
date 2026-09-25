@@ -22,7 +22,10 @@ const server = http.createServer((req,res) => {
     const myURL = new URL(req.url,`http://${req.headers.host}`);
 
     const fileName = routes[myURL.pathname] || '404.html';
-    console.log("The dirrectory path dirname is",__dirname);
+    
+    if (fileName === '404.html') {
+  console.log('404 triggered for path:', myURL.pathname);
+}
 
     // connecting the route to filepath
     const filePath = path.join(__dirname,fileName);
