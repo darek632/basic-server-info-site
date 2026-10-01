@@ -1,56 +1,93 @@
 // Node.js first server
 
-const http = require('http');
-const fs = require('fs');
-const path = require('path'); 
+// ALL COMMENTS IN CAPS ARE FOR REMAKING IN EXPRESS
+
+// const http = require('http');
+// const fs = require('fs');
+// const path = require('path'); 
+
+// // THESE ALL GET REPLACED BY EXPRESS
+
+// const PORT = 8080;
+
+// console.log("Script started");
+
+// const routes = {
+//     '/' : 'index.html',
+//     '/about' : 'about.html',
+//     '/contact-me' : 'contact-me.html',
+// }
+
+// const server = http.createServer((req,res) => {
+//     // request object contains all the necessary info we need, like an event object
+//     // turn the string into a proper URL object so we can extract parts and interact with it.
+
+//     //myURL takes in the route and base 
+//     const myURL = new URL(req.url,`http://${req.headers.host}`);
+
+//     const fileName = routes[myURL.pathname] || '404.html';
+
+//     if (fileName === '404.html') {
+//   console.log('404 triggered for path:', myURL.pathname);
+// }
+
+//     // connecting the route to filepath
+//     const filePath = path.join(__dirname,fileName);
+    
+//     fs.readFile(filePath,(err,content)=> {
+//         if(err) { 
+//             //once the readfile is processed it will pass two objects to callback, err and content.
+//             // if err contains something this means the error will get processed, otherwise it will be the actual content
+
+//             res.writeHead(500,{'Content-type':'text/plain'});
+//             res.end('500 - Internal Server Error');
+
+//             return;
+//         }
+
+//         const statusCode = fileName === '404.html' ? 404 : 200;
+
+//         res.writeHead(statusCode,{'Content-Type': 'text/html'});
+//         console.log('The page is at route:', fileName);
+//         res.end(content);
+
+//     })
+// });
+
+// server.listen(PORT,()=> {
+//     console.log(`Server running at http://localhost:${PORT}`);
+// })
+
+
+// rewriting using express.
+//1st create package.json so we can use dependencies and so project becomes reproducable on other devices
+// install express using npm install express
+
+const express = require("express");
+const path = require("path");
+const app = express();
+
+app.get("/", (req,res) => {
+    res.sendFile(path.join(__dirname,"index.html"))});
+
+app.get("/about", (req,res) => {
+    res.sendFile(path.join(__dirname,"about.html"))});
+
+app.get("/contact-me", (req,res) => {
+    res.sendFile(path.join(__dirname,"contact-me.html"))});
+
+app.use((req,res) => {
+    res.status(404).sendFile(path.join(__dirname,"404.html"));
+})
+
 
 const PORT = 8080;
 
-console.log("Script started");
-
-const routes = {
-    '/' : 'index.html',
-    '/about' : 'about.html',
-    '/contact-me' : 'contact-me.html',
-}
-
-const server = http.createServer((req,res) => {
-    // request object contains all the necessary info we need, like an event object
-    // turn the string into a proper URL object so we can extract parts and interact with it.
-
-    //myURL takes in the route and base 
-    const myURL = new URL(req.url,`http://${req.headers.host}`);
-
-    const fileName = routes[myURL.pathname] || '404.html';
-    
-    if (fileName === '404.html') {
-  console.log('404 triggered for path:', myURL.pathname);
-}
-
-    // connecting the route to filepath
-    const filePath = path.join(__dirname,fileName);
-    
-    fs.readFile(filePath,(err,content)=> {
-        if(err) { 
-            //once the readfile is processed it will pass two objects to callback, err and content.
-            // if err contains something this means the error will get processed, otherwise it will be the actual content
-
-            res.writeHead(500,{'Content-type':'text/plain'});
-            res.end('500 - Internal Server Error');
-
-            return;
-        }
-
-        const statusCode = fileName === '404.html' ? 404 : 200;
-
-        res.writeHead(statusCode,{'Content-Type': 'text/html'});
-        console.log('The page is at route:', fileName);
-        res.end(content);
-
-    })
-});
-
-server.listen(PORT,()=> {
-    console.log(`Server running at http://localhost:${PORT}`);
+app.listen(PORT, (error)=> {
+    if(error) {
+        throw error;
+    } 
+    console.log(`My first express app - listening on port ${PORT}`)
 })
+
 
